@@ -2,20 +2,26 @@ const canvas = document.querySelector(".canvas");
 /** @type {CanvasRenderingContext2D} */
 const canvasContext = canvas.getContext("2d");
 
-canvasContext.beginPath();
-canvasContext.rect(20, 40, 50, 50);
-canvasContext.fillStyle = "#FF0000";
-canvasContext.fill();
-canvasContext.closePath();
+let ballX = canvas.width / 2;
+let ballY = canvas.height - 30;
+let balldX = 2;
+let balldY = -2;
 
-canvasContext.beginPath();
-canvasContext.arc(240, 160, 20, 0, Math.PI * 2, false);
-canvasContext.fillStyle = "green";
-canvasContext.fill();
-canvasContext.closePath();
+const draw = () => {
+  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
-canvasContext.beginPath();
-canvasContext.rect(160, 10, 100, 40);
-canvasContext.strokeStyle = "rgb(0 0 255 / 50%)";
-canvasContext.stroke();
-canvasContext.closePath();
+  drawBall();
+
+  ballX += balldX;
+  ballY += balldY;
+};
+
+const drawBall = () => {
+  canvasContext.beginPath();
+  canvasContext.arc(ballX, ballY, 10, 0, Math.PI * 2);
+  canvasContext.fillStyle = "#0095DD";
+  canvasContext.fill();
+  canvasContext.closePath();
+};
+
+setInterval(draw, 10);
