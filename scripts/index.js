@@ -1,6 +1,7 @@
 const canvas = document.querySelector(".canvas");
 /** @type {CanvasRenderingContext2D} */
 const canvasContext = canvas.getContext("2d");
+const startButton = document.querySelector(".canvas__button");
 
 let ballX = canvas.width / 2;
 let ballY = canvas.height - 30;
@@ -24,4 +25,12 @@ const drawBall = () => {
   canvasContext.closePath();
 };
 
-setInterval(draw, 10);
+function startGame() {
+  setInterval(draw, 10);
+}
+
+startButton.addEventListener("click", () => {
+  startGame();
+  startButton.disabled = true;
+  startButton.classList.add(".canvas__button_type_disabled");
+});

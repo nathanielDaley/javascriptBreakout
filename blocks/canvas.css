@@ -3,3 +3,11 @@
   display: block;
   margin: 0 auto;
 }
+
+.canvas__button {
+  max-width: 320px;
+}
+
+.canvas__button_type_disabled {
+  opacity: 0.5;
+}
