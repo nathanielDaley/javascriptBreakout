@@ -5,6 +5,8 @@ const startButton = document.querySelector(".canvas__button");
 
 let interval = 0;
 
+const objectColor = "#0095DD";
+
 //Ball variables
 const ballRadius = 10;
 
@@ -20,15 +22,29 @@ const paddleDX = 7;
 
 let paddleX = (canvas.width - paddleWidth) / 2;
 
+//Brick variables
+const brickRowCount = 3;
+const brickColumnCount = 5;
+const brickWidth = 75;
+const brickHeight = 20;
+const brickPadding = 10;
+const brickOffsetTop = 30;
+const brickOffsetLeft = 30;
+
+const bricks = [];
+for (let c = 0; c < brickColumnCount; c++) {
+  bricks[c] = [];
+  for (let r = 0; r < brickRowCount; r++) {
+    bricks[c][r] = { x: 0, y: 0 };
+  }
+}
+
 //For keyboard interaction
 let rightPressed = false;
 let leftPressed = false;
 
 const draw = () => {
   canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-
-  drawBall();
-  drawPaddle();
 
   //If the ball is going to go past the left or right walls
   //reverse the X direction
@@ -66,18 +82,23 @@ const draw = () => {
   } else if (leftPressed) {
     paddleX = Math.max(paddleX - paddleDX, 0);
   }
+
+  //Draw objects
+  drawBricks(objectColor);
+  drawBall(objectColor);
+  drawPaddle(objectColor);
 };
 
 //Draw functions
-const drawBall = () => {
+const drawBall = (color) => {
   canvasContext.beginPath();
   canvasContext.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-  canvasContext.fillStyle = "#0095DD";
+  canvasContext.fillStyle = color;
   canvasContext.fill();
   canvasContext.closePath();
 };
 
-const drawPaddle = () => {
+const drawPaddle = (color) => {
   canvasContext.beginPath();
   canvasContext.rect(
     paddleX,
@@ -85,9 +106,26 @@ const drawPaddle = () => {
     paddleWidth,
     paddleHeight
   );
-  canvasContext.fillStyle = "#0095DD";
+  canvasContext.fillStyle = color;
   canvasContext.fill();
   canvasContext.closePath();
+};
+
+const drawBricks = (color) => {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+      const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+
+      bricks[c][r].x = brickX;
+      bricks[c][r].y = brickY;
+      canvasContext.beginPath();
+      canvasContext.rect(brickX, brickY, brickWidth, brickHeight);
+      canvasContext.fillStyle = color;
+      canvasContext.fill();
+      canvasContext.closePath();
+    }
+  }
 };
 
 //Keyboard functions
@@ -113,8 +151,8 @@ function startGame() {
 
 //When Start Button is clicked
 startButton.addEventListener("click", () => {
-  startGame();
   startButton.disabled = true;
+  startGame();
 });
 
 //When keyboard keys are pressed
