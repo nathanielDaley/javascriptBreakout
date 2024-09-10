@@ -5,6 +5,8 @@ const startButton = document.querySelector(".canvas__button");
 
 let interval = 0;
 
+let score = 0;
+
 const objectColor = "#0095DD";
 
 //Ball variables
@@ -46,6 +48,14 @@ let leftPressed = false;
 const draw = () => {
   canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
+  //Draw objects
+  drawBricks(objectColor);
+  drawBall(objectColor);
+  drawPaddle(objectColor);
+  collisionDetection();
+  drawScore(objectColor);
+  winIfWon();
+
   //If the ball is going to go past the left or right walls
   //reverse the X direction
   if (
@@ -65,7 +75,7 @@ const draw = () => {
     ballX >= paddleX &&
     ballX <= paddleX + paddleWidth
   ) {
-    balldY = -balldY;
+    balldY = -Math.abs(balldY);
   } else if (ballY + balldY > canvas.height - ballRadius) {
     alert("Game Over");
     document.location.reload();
@@ -82,12 +92,6 @@ const draw = () => {
   } else if (leftPressed) {
     paddleX = Math.max(paddleX - paddleDX, 0);
   }
-
-  //Draw objects
-  collisionDetection();
-  drawBricks(objectColor);
-  drawBall(objectColor);
-  drawPaddle(objectColor);
 };
 
 //Draw functions
@@ -131,6 +135,12 @@ const drawBricks = (color) => {
   }
 };
 
+const drawScore = (color) => {
+  canvasContext.font = "16px Arial";
+  canvasContext.fillStyle = color;
+  canvasContext.fillText(`Score: ${score}`, 8, 20);
+};
+
 //Brick collision detection
 function collisionDetection() {
   for (let c = 0; c < brickColumnCount; c++) {
@@ -145,11 +155,20 @@ function collisionDetection() {
         ) {
           balldY = -balldY;
           b.status = 0;
+          score++;
         }
       }
     }
   }
 }
+
+const winIfWon = () => {
+  if (score === brickRowCount * brickColumnCount) {
+    alert("YOU WIN, CONGRATULATIONS!");
+    document.location.reload();
+    clearInterval(interval); // Needed for Chrome to end game
+  }
+};
 
 //Keyboard functions
 const keyDownHandler = (evt) => {
