@@ -35,7 +35,7 @@ const bricks = [];
 for (let c = 0; c < brickColumnCount; c++) {
   bricks[c] = [];
   for (let r = 0; r < brickRowCount; r++) {
-    bricks[c][r] = { x: 0, y: 0 };
+    bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
 }
 
@@ -84,6 +84,7 @@ const draw = () => {
   }
 
   //Draw objects
+  collisionDetection();
   drawBricks(objectColor);
   drawBall(objectColor);
   drawPaddle(objectColor);
@@ -114,19 +115,41 @@ const drawPaddle = (color) => {
 const drawBricks = (color) => {
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
-      const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-      const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+      if (bricks[c][r].status === 1) {
+        const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+        const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
 
-      bricks[c][r].x = brickX;
-      bricks[c][r].y = brickY;
-      canvasContext.beginPath();
-      canvasContext.rect(brickX, brickY, brickWidth, brickHeight);
-      canvasContext.fillStyle = color;
-      canvasContext.fill();
-      canvasContext.closePath();
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        canvasContext.beginPath();
+        canvasContext.rect(brickX, brickY, brickWidth, brickHeight);
+        canvasContext.fillStyle = color;
+        canvasContext.fill();
+        canvasContext.closePath();
+      }
     }
   }
 };
+
+//Brick collision detection
+function collisionDetection() {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const b = bricks[c][r];
+      if (b.status === 1) {
+        if (
+          ballX + ballRadius > b.x &&
+          ballX - ballRadius < b.x + brickWidth &&
+          ballY + ballRadius > b.y &&
+          ballY - ballRadius < b.y + brickHeight
+        ) {
+          balldY = -balldY;
+          b.status = 0;
+        }
+      }
+    }
+  }
+}
 
 //Keyboard functions
 const keyDownHandler = (evt) => {
