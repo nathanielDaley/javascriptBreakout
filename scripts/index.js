@@ -33,6 +33,9 @@ const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 
+//Game options
+let lives = 3;
+
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c++) {
   bricks[c] = [];
@@ -55,6 +58,7 @@ const draw = () => {
   collisionDetection();
   drawScore(objectColor);
   winIfWon();
+  drawLives();
 
   //If the ball is going to go past the left or right walls
   //reverse the X direction
@@ -77,9 +81,18 @@ const draw = () => {
   ) {
     balldY = -Math.abs(balldY);
   } else if (ballY + balldY > canvas.height - ballRadius) {
-    alert("Game Over");
-    document.location.reload();
-    clearInterval(interval);
+    lives--;
+    if (!lives) {
+      alert("Game Over");
+      document.location.reload();
+      clearInterval(interval);
+    } else {
+      ballX = canvas.width / 2;
+      ballY = canvas.height - 30;
+      balldX = 2;
+      balldY = -2;
+      paddleX = (canvas.width - paddleWidth) / 2;
+    }
   }
 
   // Update ball position
@@ -139,6 +152,12 @@ const drawScore = (color) => {
   canvasContext.font = "16px Arial";
   canvasContext.fillStyle = color;
   canvasContext.fillText(`Score: ${score}`, 8, 20);
+};
+
+const drawLives = (color) => {
+  canvasContext.font = "16px Arial";
+  canvasContext.fillStyle = color;
+  canvasContext.fillText(`Lives: ${lives}`, 75, 20);
 };
 
 //Brick collision detection
