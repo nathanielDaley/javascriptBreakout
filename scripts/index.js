@@ -3,6 +3,8 @@ const canvas = document.querySelector(".canvas");
 const canvasContext = canvas.getContext("2d");
 const startButton = document.querySelector(".canvas__button");
 
+let interval = 0;
+
 //Ball variables
 const ballRadius = 10;
 
@@ -37,15 +39,24 @@ const draw = () => {
     balldX = -balldX;
   }
 
-  //If the ball is going to go past the top or bottom walls
+  //If the ball is going to go past the top wall or hits the paddle
   //reverse the Y direction
-  if (
-    ballY + balldY > canvas.height - ballRadius ||
-    ballY + balldY < ballRadius
+  //If the ball hits the bottom of the screen Game Over
+  if (ballY + balldY < ballRadius) {
+    balldY = -balldY;
+  } else if (
+    ballY + balldY + paddleHeight > canvas.height - ballRadius &&
+    ballX >= paddleX &&
+    ballX <= paddleX + paddleWidth
   ) {
     balldY = -balldY;
+  } else if (ballY + balldY > canvas.height - ballRadius) {
+    alert("Game Over");
+    document.location.reload();
+    clearInterval(interval);
   }
 
+  // Update ball position
   ballX += balldX;
   ballY += balldY;
 
@@ -97,7 +108,7 @@ function keyUpHandler(evt) {
 }
 
 function startGame() {
-  setInterval(draw, 10);
+  interval = setInterval(draw, 10);
 }
 
 //When Start Button is clicked
