@@ -3,6 +3,8 @@ const canvas = document.querySelector(".canvas");
 const canvasContext = canvas.getContext("2d");
 const startButton = document.querySelector(".canvas__button");
 
+const ballRadius = 10;
+
 let ballX = canvas.width / 2;
 let ballY = canvas.height - 30;
 let balldX = 2;
@@ -13,13 +15,31 @@ const draw = () => {
 
   drawBall();
 
+  //If the ball is going to go past the left or right walls
+  //reverse the X direction
+  if (
+    ballX + balldX > canvas.width - ballRadius ||
+    ballX + balldX < ballRadius
+  ) {
+    balldX = -balldX;
+  }
+
+  //If the ball is going to go past the top or bottom walls
+  //reverse the Y direction
+  if (
+    ballY + balldY > canvas.height - ballRadius ||
+    ballY + balldY < ballRadius
+  ) {
+    balldY = -balldY;
+  }
+
   ballX += balldX;
   ballY += balldY;
 };
 
 const drawBall = () => {
   canvasContext.beginPath();
-  canvasContext.arc(ballX, ballY, 10, 0, Math.PI * 2);
+  canvasContext.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
   canvasContext.fillStyle = "#0095DD";
   canvasContext.fill();
   canvasContext.closePath();
@@ -32,5 +52,4 @@ function startGame() {
 startButton.addEventListener("click", () => {
   startGame();
   startButton.disabled = true;
-  startButton.classList.add(".canvas__button_type_disabled");
 });

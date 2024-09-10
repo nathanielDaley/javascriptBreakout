@@ -6,8 +6,14 @@
 
 .canvas__button {
   max-width: 320px;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background-color: #0095dd;
+  cursor: pointer;
+  color: #ffffdd;
 }
 
-.canvas__button_type_disabled {
-  opacity: 0.5;
+.canvas__button:disabled {
+  visibility: hidden;
 }
