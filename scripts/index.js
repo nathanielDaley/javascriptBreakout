@@ -179,13 +179,21 @@ const keyDownHandler = (evt) => {
   }
 };
 
-function keyUpHandler(evt) {
+const keyUpHandler = (evt) => {
   if (evt.key === "Right" || evt.key === "ArrowRight") {
     rightPressed = false;
   } else if (evt.key === "Left" || evt.key === "ArrowLeft") {
     leftPressed = false;
   }
-}
+};
+
+const mouseMoveHandler = (evt) => {
+  const relativeX = evt.clientX - canvas.offsetLeft;
+
+  if (relativeX > 0 && relativeX < canvas.width) {
+    paddleX = relativeX - paddleWidth / 2;
+  }
+};
 
 function startGame() {
   interval = setInterval(draw, 10);
@@ -200,3 +208,6 @@ startButton.addEventListener("click", () => {
 //When keyboard keys are pressed
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+
+//When mouse moved
+document.addEventListener("mousemove", mouseMoveHandler, false);
